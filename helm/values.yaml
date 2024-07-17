@@ -1,143 +1,144 @@
-global:
-  multitenancy:
-    enabled: true
-  ingress:
-    enabled: true
-    className: nginx
-    host: "dittmeister.de"
-    tls:
-      enabled: true
-      secretName: camunda-tls
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
-      ingress.kubernetes.io/rewrite-target: "/"
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
-  identity:
-    auth:
-      publicIssuerUrl: "https://dittmeister.de/auth/realms/camunda-platform"
-      operate:
-        redirectUrl: "https://dittmeister.de/operate"
-      tasklist:
-        redirectUrl: "https://dittmeister.de/tasklist"
-      optimize:
-        redirectUrl: "https://dittmeister.de/optimize"
-      webModeler:
-        redirectUrl: "https://dittmeister.de/modeler"
-      console:
-        redirectUrl: "https://dittmeister.de/console"
-
-identity:
-  postgresql:
-    enabled: true
-  contextPath: "/identity"
-  fullURL: "https://dittmeister.de/identity"
-  env:
-  - name: RESOURCE_PERMISSIONS_ENABLED
-    value: "true"
-
-operate:
-  contextPath: "/operate"
-  env:
-  - name: CAMUNDA_OPERATE_IDENTITY_RESOURCEPERMISSIONSENABLED
-    value: "true"
-
-optimize:
-  contextPath: "/optimize"
-
-tasklist:
-  contextPath: "/tasklist"
-  env:
-  - name: CAMUNDA_TASKLIST_IMPORTER_READERBACKOFF
-    value: "1"
-  - name: CAMUNDA_TASKLIST_IDENTITY_RESOURCEPERMISSIONSENABLED
-    value: "true"
-
-console:
-  enabled: true
-  contextPath: "/console"
-  image:
-    pullSecrets:
-      - name: docker-registry
-  env:
-  - name: CAMUNDA_CONSOLE_TELEMETRY
-    value: "online"
-  - name: CAMUNDA_CONSOLE_CUSTOMERID
-    value: manuel.dittmar
-  - name: CAMUNDA_CONSOLE_INSTALLATIONID
-    value: camundi
-
-webModeler:
-  contextPath: "/modeler"
-  enabled: true
-  image:
-    pullSecrets:
-      - name: docker-registry
-  restapi:
-    mail:
-      smtpHost: smtp.example.com
-      smtpPort: 587
-      smtpUser: user
-      smtpPassword: secret
-      # email address to be displayed as sender of emails from Web Modeler
-      fromAddress: no-reply@example.com
-postgresql:
-  enabled: true
-
-zeebe:
-  logLevel: debug
-  env:
-  - name: ZEEBE_BROKER_EXECUTION_METRICS_EXPORTER_ENABLED
-    value: "true"
-  - name: ZEEBE_BROKER_EXPORTERS_ELASTICSEARCH_ARGS_BULK_DELAY
-    value: "1"
-
-zeebeGateway:
-  env:
-  - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE
-    value: "none"
-  - name: ZEEBE_GATEWAY_MONITORING_ENABLED
-    value: "true"
-  logLevel: debug
-  ingress:
-    enabled: true
-    className: nginx
-    host: "zeebe.dittmeister.de"
-    tls:
-      enabled: true
-      secretName: zeebe-tls
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
-      ingress.kubernetes.io/rewrite-target: "/"
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
-      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
-
-elasticsearch:
+camunda-platform:
   global:
-   kibanaEnabled: true
-  kibana:
-    image:
-      tag: 8.12.2
-    ingress:
-      tls: true
-      ingressClassName: nginx
+    multitenancy:
       enabled: true
-      pathType: Prefix
-      hostname: "dittmeister.de"
-      path: "/kibana"
+    ingress:
+      enabled: true
+      className: nginx
+      host: "dittmeister.de"
+      tls:
+        enabled: true
+        secretName: camunda-tls
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-prod"
         ingress.kubernetes.io/rewrite-target: "/"
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    configuration:
-      server:
-        basePath: "/kibana"
-        rewriteBasePath: true
-    configurationCM: myconfig
-    readinessProbe:
-      enabled: false
-prometheusServiceMonitor:
-  enabled: true
+    identity:
+      auth:
+        publicIssuerUrl: "https://dittmeister.de/auth/realms/camunda-platform"
+        operate:
+          redirectUrl: "https://dittmeister.de/operate"
+        tasklist:
+          redirectUrl: "https://dittmeister.de/tasklist"
+        optimize:
+          redirectUrl: "https://dittmeister.de/optimize"
+        webModeler:
+          redirectUrl: "https://dittmeister.de/modeler"
+        console:
+          redirectUrl: "https://dittmeister.de/console"
 
-identityPostgresql:
-  enabled: true
+  identity:
+    postgresql:
+      enabled: true
+    contextPath: "/identity"
+    fullURL: "https://dittmeister.de/identity"
+    env:
+    - name: RESOURCE_PERMISSIONS_ENABLED
+      value: "true"
+
+  operate:
+    contextPath: "/operate"
+    env:
+    - name: CAMUNDA_OPERATE_IDENTITY_RESOURCEPERMISSIONSENABLED
+      value: "true"
+
+  optimize:
+    contextPath: "/optimize"
+
+  tasklist:
+    contextPath: "/tasklist"
+    env:
+    - name: CAMUNDA_TASKLIST_IMPORTER_READERBACKOFF
+      value: "1"
+    - name: CAMUNDA_TASKLIST_IDENTITY_RESOURCEPERMISSIONSENABLED
+      value: "true"
+
+  console:
+    enabled: true
+    contextPath: "/console"
+    image:
+      pullSecrets:
+        - name: docker-registry
+    env:
+    - name: CAMUNDA_CONSOLE_TELEMETRY
+      value: "online"
+    - name: CAMUNDA_CONSOLE_CUSTOMERID
+      value: manuel.dittmar
+    - name: CAMUNDA_CONSOLE_INSTALLATIONID
+      value: camundi
+
+  webModeler:
+    contextPath: "/modeler"
+    enabled: true
+    image:
+      pullSecrets:
+        - name: docker-registry
+    restapi:
+      mail:
+        smtpHost: smtp.example.com
+        smtpPort: 587
+        smtpUser: user
+        smtpPassword: secret
+        # email address to be displayed as sender of emails from Web Modeler
+        fromAddress: no-reply@example.com
+  postgresql:
+    enabled: true
+
+  zeebe:
+    logLevel: debug
+    env:
+    - name: ZEEBE_BROKER_EXECUTION_METRICS_EXPORTER_ENABLED
+      value: "true"
+    - name: ZEEBE_BROKER_EXPORTERS_ELASTICSEARCH_ARGS_BULK_DELAY
+      value: "1"
+
+  zeebeGateway:
+    env:
+    - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE
+      value: "none"
+    - name: ZEEBE_GATEWAY_MONITORING_ENABLED
+      value: "true"
+    logLevel: debug
+    ingress:
+      enabled: true
+      className: nginx
+      host: "zeebe.dittmeister.de"
+      tls:
+        enabled: true
+        secretName: zeebe-tls
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        ingress.kubernetes.io/rewrite-target: "/"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+
+  elasticsearch:
+    global:
+    kibanaEnabled: true
+    kibana:
+      image:
+        tag: 8.12.2
+      ingress:
+        tls: true
+        ingressClassName: nginx
+        enabled: true
+        pathType: Prefix
+        hostname: "dittmeister.de"
+        path: "/kibana"
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          ingress.kubernetes.io/rewrite-target: "/"
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      configuration:
+        server:
+          basePath: "/kibana"
+          rewriteBasePath: true
+      configurationCM: myconfig
+      readinessProbe:
+        enabled: false
+  prometheusServiceMonitor:
+    enabled: true
+
+  identityPostgresql:
+    enabled: true
