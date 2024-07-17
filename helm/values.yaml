@@ -138,7 +138,8 @@ camunda-platform:
         nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
 
   elasticsearch:
-    image: example.jfrog.io/elastic/elasticsearch
+    image: 
+      repository: example.jfrog.io/elastic/elasticsearch
     global:
       kibanaEnabled: true
     kibana:
