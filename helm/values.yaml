@@ -170,6 +170,8 @@ camunda-platform:
       repository: example.jfrog.io/camunda/postgres
 
   identityKeycloak:
+    image:
+      repository: example.jfrog.io/camunda/keycloak
     postgresql:
       image:
         repository: example.jfrog.io/camunda/postgres
