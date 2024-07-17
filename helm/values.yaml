@@ -28,6 +28,8 @@ camunda-platform:
           redirectUrl: "https://dittmeister.de/console"
 
   identity:
+    image:
+      repository: example.jfrog.io/camunda/identity
     postgresql:
       enabled: true
     contextPath: "/identity"
@@ -37,15 +39,21 @@ camunda-platform:
       value: "true"
 
   operate:
+    image:
+      repository: example.jfrog.io/camunda/operate
     contextPath: "/operate"
     env:
     - name: CAMUNDA_OPERATE_IDENTITY_RESOURCEPERMISSIONSENABLED
       value: "true"
 
   optimize:
+    image:
+      repository: example.jfrog.io/camunda/optimize
     contextPath: "/optimize"
 
   tasklist:
+    image:
+      repository: example.jfrog.io/camunda/tasklist
     contextPath: "/tasklist"
     env:
     - name: CAMUNDA_TASKLIST_IMPORTER_READERBACKOFF
@@ -54,11 +62,12 @@ camunda-platform:
       value: "true"
 
   console:
-    enabled: true
-    contextPath: "/console"
     image:
+      repository: example.jfrog.io/camunda/console
       pullSecrets:
         - name: docker-registry
+    enabled: true
+    contextPath: "/console"
     env:
     - name: CAMUNDA_CONSOLE_TELEMETRY
       value: "online"
@@ -71,9 +80,18 @@ camunda-platform:
     contextPath: "/modeler"
     enabled: true
     image:
+      repository: example.jfrog.io/camunda/modeler
       pullSecrets:
         - name: docker-registry
+    websockets:
+      image:
+        repository: example.jfrog.io/camunda/modeler-websockets
+    webapp:
+      image:
+        repository: example.jfrog.io/camunda/modeler-webapp
     restapi:
+      image:
+        repository: example.jfrog.io/camunda/modeler-rest-api
       mail:
         smtpHost: smtp.example.com
         smtpPort: 587
@@ -82,9 +100,13 @@ camunda-platform:
         # email address to be displayed as sender of emails from Web Modeler
         fromAddress: no-reply@example.com
   postgresql:
+    image:
+      repository: example.jfrog.io/camunda/console
     enabled: true
 
   zeebe:
+    image:
+      repository: example.jfrog.io/camunda/console
     logLevel: debug
     env:
     - name: ZEEBE_BROKER_EXECUTION_METRICS_EXPORTER_ENABLED
@@ -93,6 +115,8 @@ camunda-platform:
       value: "1"
 
   zeebeGateway:
+    image:
+      repository: example.jfrog.io/camunda/console
     env:
     - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE
       value: "none"
@@ -114,8 +138,9 @@ camunda-platform:
         nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
 
   elasticsearch:
+    image: example.jfrog.io/elastic/elasticsearch
     global:
-    kibanaEnabled: true
+      kibanaEnabled: true
     kibana:
       image:
         tag: 8.12.2
@@ -142,3 +167,5 @@ camunda-platform:
 
   identityPostgresql:
     enabled: true
+    image:
+      repository: example.jfrog.io/camunda/postgres
