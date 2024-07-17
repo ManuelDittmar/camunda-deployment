@@ -3,5 +3,5 @@ name: camunda-umbrella
 version: 1.0.0
 dependencies:
   - name: camunda-platform
-    version: 9.3.7
+    version: 10.2.0
     repository: https://helm.camunda.io
