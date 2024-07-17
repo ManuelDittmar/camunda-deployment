@@ -30,8 +30,6 @@ camunda-platform:
   identity:
     image:
       repository: example.jfrog.io/camunda/identity
-    postgresql:
-      enabled: true
     contextPath: "/identity"
     fullURL: "https://dittmeister.de/identity"
     env:
@@ -170,3 +168,8 @@ camunda-platform:
     enabled: true
     image:
       repository: example.jfrog.io/camunda/postgres
+
+  identityKeycloak:
+    postgresql:
+      image:
+        repository: example.jfrog.io/camunda/postgres
