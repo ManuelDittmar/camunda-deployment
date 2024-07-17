@@ -171,7 +171,9 @@ camunda-platform:
 
   identityKeycloak:
     image:
+      registry: example.jfrog.io
       repository: example.jfrog.io/camunda/keycloak
     postgresql:
       image:
+        registry: example.jfrog.io
         repository: example.jfrog.io/camunda/postgres
