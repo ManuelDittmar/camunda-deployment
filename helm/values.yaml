@@ -51,37 +51,6 @@ camunda-platform:
     - name: CAMUNDA_TASKLIST_IDENTITY_RESOURCEPERMISSIONSENABLED
       value: "true"
 
-  console:
-    enabled: true
-    contextPath: "/console"
-    image:
-      pullSecrets:
-        - name: docker-registry
-    env:
-    - name: CAMUNDA_CONSOLE_TELEMETRY
-      value: "online"
-    - name: CAMUNDA_CONSOLE_CUSTOMERID
-      value: manuel.dittmar
-    - name: CAMUNDA_CONSOLE_INSTALLATIONID
-      value: camundi
-
-  webModeler:
-    contextPath: "/modeler"
-    enabled: true
-    image:
-      pullSecrets:
-        - name: docker-registry
-    restapi:
-      mail:
-        smtpHost: smtp.example.com
-        smtpPort: 587
-        smtpUser: user
-        smtpPassword: secret
-        # email address to be displayed as sender of emails from Web Modeler
-        fromAddress: no-reply@example.com
-  postgresql:
-    enabled: true
-
   zeebe:
     logLevel: debug
     env:
