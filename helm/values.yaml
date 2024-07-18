@@ -27,19 +27,12 @@ camunda-platform:
 
   identity:
     postgresql:
-      enabled: true
+      enabled: false
     contextPath: "/identity"
     fullURL: "https://dittmeister.de/identity"
-    env:
-    - name: RESOURCE_PERMISSIONS_ENABLED
-      value: "true"
 
   operate:
     contextPath: "/operate"
-    env:
-    - name: CAMUNDA_OPERATE_IDENTITY_RESOURCEPERMISSIONSENABLED
-      value: "true"
-
   optimize:
     contextPath: "/optimize"
 
@@ -48,8 +41,6 @@ camunda-platform:
     env:
     - name: CAMUNDA_TASKLIST_IMPORTER_READERBACKOFF
       value: "1"
-    - name: CAMUNDA_TASKLIST_IDENTITY_RESOURCEPERMISSIONSENABLED
-      value: "true"
 
   zeebe:
     logLevel: debug
