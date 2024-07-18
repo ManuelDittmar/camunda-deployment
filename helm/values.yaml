@@ -1,7 +1,5 @@
 camunda-platform:
   global:
-    multitenancy:
-      enabled: true
     ingress:
       enabled: true
       className: nginx
@@ -92,7 +90,7 @@ camunda-platform:
     - name: ZEEBE_BROKER_EXPORTERS_ELASTICSEARCH_ARGS_BULK_DELAY
       value: "1"
 
-  zeebeGateway:
+  zeebe-gateway:
     env:
     - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE
       value: "none"
@@ -113,32 +111,5 @@ camunda-platform:
         nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
         nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
 
-  elasticsearch:
-    global:
-      kibanaEnabled: true
-    kibana:
-      image:
-        tag: 8.12.2
-      ingress:
-        tls: true
-        ingressClassName: nginx
-        enabled: true
-        pathType: Prefix
-        hostname: "dittmeister.de"
-        path: "/kibana"
-        annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
-          ingress.kubernetes.io/rewrite-target: "/"
-          nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      configuration:
-        server:
-          basePath: "/kibana"
-          rewriteBasePath: true
-      configurationCM: myconfig
-      readinessProbe:
-        enabled: false
   prometheusServiceMonitor:
-    enabled: true
-
-  identityPostgresql:
     enabled: true
