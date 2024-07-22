@@ -15,23 +15,26 @@ camunda-platform:
       auth:
         publicIssuerUrl: "https://dittmeister.de/auth/realms/camunda-platform"
         operate:
-          existingSecretKey:
+          existingSecret:
             name: lazy-secret
           redirectUrl: "https://dittmeister.de/operate"
         tasklist:
-          existingSecretKey:
+          existingSecret:
             name: lazy-secret
           redirectUrl: "https://dittmeister.de/tasklist"
         optimize:
-          existingSecretKey:
+          existingSecret:
             name: lazy-secret
           redirectUrl: "https://dittmeister.de/optimize"
         webModeler:
-          existingSecretKey:
+          existingSecret:
             name: lazy-secret
           redirectUrl: "https://dittmeister.de/modeler"
         console:
-          existingSecretKey:
+          existingSecret:
+            name: lazy-secret
+        connectors:
+          existingSecret:
             name: lazy-secret
           redirectUrl: "https://dittmeister.de/console"
 
@@ -137,24 +140,20 @@ camunda-platform:
       value: minioadmin
     - name: S3_ACCESS_KEY
       value: minioadmin
-
-  prometheusServiceMonitor:
-    enabled: true
   
   identityPostgresql:
     enabled: true
     auth:
-      postgresPassword: SecretPassword
-      password: SecretPassword
+      existingSecret:
+        name: lazy-secret
 
   identityKeycloak:
     auth:
-      adminPassword: SecretPassword
-      managementPassword: SecretPassword
-    postgresql:
-      auth:
-        postgresPassword: SecretPassword
-        password: SecretPassword
+      existingSecret:
+        name: lazy-secret
+  
+  prometheusServiceMonitor:
+    enabled: true
 
 minio:
   auth:
