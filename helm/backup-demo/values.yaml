@@ -174,7 +174,7 @@ minio:
     hostname: "dittmeister.de"
     tls: true
     annotations: 
-      cert-manager.io/issuer: "letsencrypt-prod"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
       ingress.kubernetes.io/rewrite-target: "/"
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
     ingressClassName: nginx
