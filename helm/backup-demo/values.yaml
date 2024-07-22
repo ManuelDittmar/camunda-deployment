@@ -158,9 +158,6 @@ camunda-platform:
     postgresql:
       auth:
         existingSecret: lazy-secret
-        secretKeys:
-          adminPasswordKey: postgres-password
-          userPasswordKey: password
   
   prometheusServiceMonitor:
     enabled: true
