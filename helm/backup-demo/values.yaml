@@ -14,6 +14,9 @@ camunda-platform:
     identity:
       auth:
         publicIssuerUrl: "https://dittmeister.de/auth/realms/camunda-platform"
+        zeebe:
+          existingSecret:
+            name: lazy-secret
         operate:
           existingSecret:
             name: lazy-secret
@@ -143,8 +146,10 @@ camunda-platform:
   
   identityPostgresql:
     enabled: true
-    auth:
-      existingSecret: lazy-secret
+    global:
+      postgresql:
+        auth:
+          existingSecret: lazy-secret
 
   identityKeycloak:
     auth:
