@@ -1,0 +1,10 @@
+apiVersion: v2
+name: camunda-umbrella
+version: 1.0.0
+dependencies:
+  - name: camunda-platform
+    version: 10.2.0
+    repository: https://helm.camunda.io
+  - name: minio
+    version: 14.6.25
+    repository: oci://registry-1.docker.io/bitnamicharts/minio

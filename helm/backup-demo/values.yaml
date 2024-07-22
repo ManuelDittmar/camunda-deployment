@@ -1,0 +1,174 @@
+camunda-platform:
+  global:
+    ingress:
+      enabled: true
+      className: nginx
+      host: "dittmeister.de"
+      tls:
+        enabled: true
+        secretName: camunda-tls
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        ingress.kubernetes.io/rewrite-target: "/"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    identity:
+      auth:
+        publicIssuerUrl: "https://dittmeister.de/auth/realms/camunda-platform"
+        operate:
+          existingSecretKey:
+            name: lazy-secret
+          redirectUrl: "https://dittmeister.de/operate"
+        tasklist:
+          existingSecretKey:
+            name: lazy-secret
+          redirectUrl: "https://dittmeister.de/tasklist"
+        optimize:
+          existingSecretKey:
+            name: lazy-secret
+          redirectUrl: "https://dittmeister.de/optimize"
+        webModeler:
+          existingSecretKey:
+            name: lazy-secret
+          redirectUrl: "https://dittmeister.de/modeler"
+        console:
+          existingSecretKey:
+            name: lazy-secret
+          redirectUrl: "https://dittmeister.de/console"
+
+  identity:     
+    contextPath: "/identity"
+    fullURL: "https://dittmeister.de/identity"
+
+  operate:
+    contextPath: "/operate"
+    env:
+    - name: CAMUNDA_OPERATE_BACKUP_REPOSITORY_NAME
+      value: "operate-backup"
+
+  optimize:
+    contextPath: "/optimize"
+    env:
+    - name: CAMUNDA_OPTIMIZE_BACKUP_REPOSITORY_NAME
+      value: "optimize-backup"
+
+  tasklist:
+    contextPath: "/tasklist"
+    env:
+    - name: CAMUNDA_TASKLIST_BACKUP_REPOSITORY_NAME
+      value: "tasklist-backup"
+
+  zeebe:
+    logLevel: debug
+    env:
+    - name: ZEEBE_BROKER_EXECUTION_METRICS_EXPORTER_ENABLED
+      value: "true"
+    - name: ZEEBE_BROKER_DATA_BACKUP_STORE
+      value: "S3"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_BUCKETNAME
+      value: "zeebe-backup"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS
+      value: "true"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_ENDPOINT
+      value: "http://minio:9000"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY
+      value: "minioadmin"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY
+      value: "minioadmin"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_REGION
+      value: "us-east-1"
+
+  zeebeGateway:
+    env:
+    - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE
+      value: "none"
+    - name: ZEEBE_GATEWAY_MONITORING_ENABLED
+      value: "true"
+    logLevel: debug
+    ingress:
+      enabled: true
+      className: nginx
+      host: "zeebe.dittmeister.de"
+      tls:
+        enabled: true
+        secretName: zeebe-tls
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        ingress.kubernetes.io/rewrite-target: "/"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+  
+  elasticsearch:
+    global:
+    kibanaEnabled: true
+    kibana:
+      image:
+        tag: 8.9.2
+      ingress:
+        tls: true
+        ingressClassName: nginx
+        enabled: true
+        hostname: "dittmeister.de"
+        path: "/kibana"
+        annotations:
+          cert-manager.io/issuer: "letsencrypt-prod"
+          ingress.kubernetes.io/rewrite-target: "/"
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      configuration:
+        server:
+          basePath: "/kibana"
+          rewriteBasePath: true
+      readinessProbe:
+        enabled: false
+    master:
+      containerSecurityContext:
+        readOnlyRootFilesystem: false
+    initScripts:
+      init-keystore.sh: |
+        #!/bin/bash
+        set -e
+        echo "Adding S3 access keys to Elasticsearch keystore..."
+        # Add S3 client default keys to the keystore
+        echo "$S3_SECRET_KEY" | elasticsearch-keystore add -x s3.client.default.secret_key -f
+        echo "$S3_ACCESS_KEY" | elasticsearch-keystore add -x s3.client.default.access_key -f
+
+    extraEnvVars:
+    - name: S3_SECRET_KEY
+      value: minioadmin
+    - name: S3_ACCESS_KEY
+      value: minioadmin
+
+  prometheusServiceMonitor:
+    enabled: true
+  
+  identityPostgresql:
+    enabled: true
+    auth:
+      postgresPassword: SecretPassword
+      password: SecretPassword
+
+  identityKeycloak:
+    auth:
+      adminPassword: SecretPassword
+      managementPassword: SecretPassword
+    postgresql:
+      auth:
+        postgresPassword: SecretPassword
+        password: SecretPassword
+
+minio:
+  auth:
+    rootUser: minioadmin
+    rootPassword: minioadmin
+
+  defaultBuckets: zeebe-backup,operate-backup,tasklist-backup,optimize-backup
+
+  ingress:
+    enabled: true
+    hostname: "dittmeister.de"
+    tls: true
+    annotations: 
+      cert-manager.io/issuer: "letsencrypt-prod"
+      ingress.kubernetes.io/rewrite-target: "/"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    ingressClassName: nginx
