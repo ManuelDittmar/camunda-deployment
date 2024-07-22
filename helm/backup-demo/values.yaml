@@ -106,7 +106,7 @@ camunda-platform:
   
   elasticsearch:
     global:
-      kibanaEnabled: true
+      kibanaEnabled: false
     kibana:
       image:
         tag: 8.12.2
