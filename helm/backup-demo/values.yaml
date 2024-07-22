@@ -146,10 +146,11 @@ camunda-platform:
   
   identityPostgresql:
     enabled: true
-    global:
-      postgresql:
-        auth:
-          existingSecret: lazy-secret
+    auth:
+      existingSecret: lazy-secret
+      secretKeys:
+          adminPasswordKey: postgres-password
+          userPasswordKey: password
 
   identityKeycloak:
     auth:
