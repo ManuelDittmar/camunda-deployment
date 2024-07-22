@@ -3,7 +3,7 @@ camunda-platform:
     ingress:
       enabled: true
       className: nginx
-      host: "dittmeister.de"
+      host: "prod.dittmeister.de"
       tls:
         enabled: true
         secretName: camunda-tls
@@ -13,37 +13,37 @@ camunda-platform:
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
     identity:
       auth:
-        publicIssuerUrl: "https://dittmeister.de/auth/realms/camunda-platform"
+        publicIssuerUrl: "https://prod.dittmeister.de/auth/realms/camunda-platform"
         zeebe:
           existingSecret:
             name: lazy-secret
         operate:
           existingSecret:
             name: lazy-secret
-          redirectUrl: "https://dittmeister.de/operate"
+          redirectUrl: "https://prod.dittmeister.de/operate"
         tasklist:
           existingSecret:
             name: lazy-secret
-          redirectUrl: "https://dittmeister.de/tasklist"
+          redirectUrl: "https://prod.dittmeister.de/tasklist"
         optimize:
           existingSecret:
             name: lazy-secret
-          redirectUrl: "https://dittmeister.de/optimize"
+          redirectUrl: "https://prod.dittmeister.de/optimize"
         webModeler:
           existingSecret:
             name: lazy-secret
-          redirectUrl: "https://dittmeister.de/modeler"
+          redirectUrl: "https://prod.dittmeister.de/modeler"
         console:
           existingSecret:
             name: lazy-secret
         connectors:
           existingSecret:
             name: lazy-secret
-          redirectUrl: "https://dittmeister.de/console"
+          redirectUrl: "https://prod.dittmeister.de/console"
 
   identity:     
     contextPath: "/identity"
-    fullURL: "https://dittmeister.de/identity"
+    fullURL: "https://prod.dittmeister.de/identity"
 
   operate:
     contextPath: "/operate"
@@ -171,7 +171,7 @@ minio:
 
   ingress:
     enabled: true
-    hostname: "dittmeister.de"
+    hostname: "minio.dittmeister.de"
     tls: true
     annotations: 
       cert-manager.io/cluster-issuer: "letsencrypt-staging"
