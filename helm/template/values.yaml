@@ -1,0 +1,96 @@
+camunda-platform:
+  global:
+    ingress:
+      enabled: true
+      className: nginx
+      host: "dittmeister.de"
+      tls:
+        enabled: true
+        secretName: camunda-tls
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        ingress.kubernetes.io/rewrite-target: "/"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    identity:
+      auth:
+        publicIssuerUrl: "https://dittmeister.de/auth/realms/camunda-platform"
+        operate:
+          existingSecretKey:
+            name: lazy-secret
+          redirectUrl: "https://dittmeister.de/operate"
+        tasklist:
+          existingSecretKey:
+            name: lazy-secret
+          redirectUrl: "https://dittmeister.de/tasklist"
+        optimize:
+          existingSecretKey:
+            name: lazy-secret
+          redirectUrl: "https://dittmeister.de/optimize"
+        webModeler:
+          existingSecretKey:
+            name: lazy-secret
+          redirectUrl: "https://dittmeister.de/modeler"
+        console:
+          existingSecretKey:
+            name: lazy-secret
+          redirectUrl: "https://dittmeister.de/console"
+
+  identity:
+    postgresql:
+      enabled: true
+      auth:
+        postgresPassword: SecretPassword
+        password: SecretPassword      
+    contextPath: "/identity"
+    fullURL: "https://dittmeister.de/identity"
+    keycloak:
+      auth:
+        adminPassword: SecretPassword
+        managementPassword: SecretPassword
+      postgresql:
+        auth:
+          postgresPassword: SecretPassword
+          password: SecretPassword
+
+  operate:
+    contextPath: "/operate"
+  optimize:
+    contextPath: "/optimize"
+
+  tasklist:
+    contextPath: "/tasklist"
+    env:
+    - name: CAMUNDA_TASKLIST_IMPORTER_READERBACKOFF
+      value: "1"
+
+  zeebe:
+    logLevel: debug
+    env:
+    - name: ZEEBE_BROKER_EXECUTION_METRICS_EXPORTER_ENABLED
+      value: "true"
+    - name: ZEEBE_BROKER_EXPORTERS_ELASTICSEARCH_ARGS_BULK_DELAY
+      value: "1"
+
+  zeebe-gateway:
+    env:
+    - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE
+      value: "none"
+    - name: ZEEBE_GATEWAY_MONITORING_ENABLED
+      value: "true"
+    logLevel: debug
+    ingress:
+      enabled: true
+      className: nginx
+      host: "zeebe.dittmeister.de"
+      tls:
+        enabled: true
+        secretName: zeebe-tls
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        ingress.kubernetes.io/rewrite-target: "/"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+
+  prometheusServiceMonitor:
+    enabled: true
