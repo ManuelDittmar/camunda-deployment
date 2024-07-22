@@ -75,7 +75,7 @@ camunda-platform:
     - name: ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS
       value: "true"
     - name: ZEEBE_BROKER_DATA_BACKUP_S3_ENDPOINT
-      value: "http://minio:9000"
+      value: "http://camunda-backup-minio:9000"
     - name: ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY
       value: "minioadmin"
     - name: ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY
