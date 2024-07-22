@@ -109,12 +109,12 @@ camunda-platform:
       kibanaEnabled: true
     kibana:
       image:
-        tag: 8.14.3
+        tag: 8.12.2
       ingress:
         tls: true
         ingressClassName: nginx
         enabled: true
-        hostname: "dittmeister.de"
+        hostname: "prod.dittmeister.de"
         path: "/kibana"
         annotations:
           cert-manager.io/issuer: "letsencrypt-staging"
