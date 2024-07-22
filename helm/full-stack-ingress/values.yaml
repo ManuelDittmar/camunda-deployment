@@ -15,42 +15,21 @@ camunda-platform:
       auth:
         publicIssuerUrl: "https://dittmeister.de/auth/realms/camunda-platform"
         operate:
-          existingSecretKey:
-            name: lazy-secret
           redirectUrl: "https://dittmeister.de/operate"
         tasklist:
-          existingSecretKey:
-            name: lazy-secret
           redirectUrl: "https://dittmeister.de/tasklist"
         optimize:
-          existingSecretKey:
-            name: lazy-secret
           redirectUrl: "https://dittmeister.de/optimize"
         webModeler:
-          existingSecretKey:
-            name: lazy-secret
           redirectUrl: "https://dittmeister.de/modeler"
         console:
-          existingSecretKey:
-            name: lazy-secret
           redirectUrl: "https://dittmeister.de/console"
 
   identity:
     postgresql:
-      enabled: true
-      auth:
-        postgresPassword: SecretPassword
-        password: SecretPassword      
+      enabled: true    
     contextPath: "/identity"
     fullURL: "https://dittmeister.de/identity"
-    keycloak:
-      auth:
-        adminPassword: SecretPassword
-        managementPassword: SecretPassword
-      postgresql:
-        auth:
-          postgresPassword: SecretPassword
-          password: SecretPassword
 
   operate:
     contextPath: "/operate"
