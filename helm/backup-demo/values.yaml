@@ -106,10 +106,10 @@ camunda-platform:
   
   elasticsearch:
     global:
-    kibanaEnabled: true
+      kibanaEnabled: true
     kibana:
       image:
-        tag: 8.9.2
+        tag: 8.14.3
       ingress:
         tls: true
         ingressClassName: nginx
@@ -154,6 +154,10 @@ camunda-platform:
   identityKeycloak:
     auth:
       existingSecret: lazy-secret
+      global:
+        postgresql:
+          auth:
+            existingSecret: lazy-secret
   
   prometheusServiceMonitor:
     enabled: true
