@@ -144,13 +144,11 @@ camunda-platform:
   identityPostgresql:
     enabled: true
     auth:
-      existingSecret:
-        name: lazy-secret
+      existingSecret: lazy-secret
 
   identityKeycloak:
     auth:
-      existingSecret:
-        name: lazy-secret
+      existingSecret: lazy-secret
   
   prometheusServiceMonitor:
     enabled: true
