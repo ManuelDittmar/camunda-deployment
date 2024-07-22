@@ -3,7 +3,7 @@ camunda-platform:
     ingress:
       enabled: true
       className: nginx
-      host: "prod.dittmeister.de"
+      host: "test.dittmeister.de"
       tls:
         enabled: true
         secretName: camunda-tls
@@ -13,37 +13,37 @@ camunda-platform:
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
     identity:
       auth:
-        publicIssuerUrl: "https://prod.dittmeister.de/auth/realms/camunda-platform"
+        publicIssuerUrl: "https://test.dittmeister.de/auth/realms/camunda-platform"
         zeebe:
           existingSecret:
             name: lazy-secret
         operate:
           existingSecret:
             name: lazy-secret
-          redirectUrl: "https://prod.dittmeister.de/operate"
+          redirectUrl: "https://test.dittmeister.de/operate"
         tasklist:
           existingSecret:
             name: lazy-secret
-          redirectUrl: "https://prod.dittmeister.de/tasklist"
+          redirectUrl: "https://test.dittmeister.de/tasklist"
         optimize:
           existingSecret:
             name: lazy-secret
-          redirectUrl: "https://prod.dittmeister.de/optimize"
+          redirectUrl: "https://test.dittmeister.de/optimize"
         webModeler:
           existingSecret:
             name: lazy-secret
-          redirectUrl: "https://prod.dittmeister.de/modeler"
+          redirectUrl: "https://test.dittmeister.de/modeler"
         console:
           existingSecret:
             name: lazy-secret
         connectors:
           existingSecret:
             name: lazy-secret
-          redirectUrl: "https://prod.dittmeister.de/console"
+          redirectUrl: "https://test.dittmeister.de/console"
 
   identity:     
     contextPath: "/identity"
-    fullURL: "https://prod.dittmeister.de/identity"
+    fullURL: "https://test.dittmeister.de/identity"
 
   operate:
     contextPath: "/operate"
@@ -114,7 +114,7 @@ camunda-platform:
         tls: true
         ingressClassName: nginx
         enabled: true
-        hostname: "prod.dittmeister.de"
+        hostname: "test.dittmeister.de"
         path: "/kibana"
         annotations:
           cert-manager.io/issuer: "letsencrypt-staging"
