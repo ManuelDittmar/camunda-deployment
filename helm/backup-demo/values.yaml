@@ -167,6 +167,9 @@ minio:
     rootUser: minioadmin
     rootPassword: minioadmin
 
+  persistence:
+    size: 128Gi
+
   defaultBuckets: zeebe-backup,operate-backup,tasklist-backup,optimize-backup
 
   ingress:
