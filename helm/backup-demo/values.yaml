@@ -178,6 +178,7 @@ minio:
   persistence:
     size: 256Gi
   provisioning:
+    enabled: true
     resourcesPreset: medium
   defaultBuckets: zeebe-backup,operate-backup,tasklist-backup,optimize-backup
 
