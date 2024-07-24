@@ -50,6 +50,10 @@ camunda-platform:
     env:
     - name: CAMUNDA_OPERATE_BACKUP_REPOSITORY_NAME
       value: "operate-backup"
+    - name: CAMUNDA_OPERATE_ELASTICSEARCH_CONNECTTIMEOUT
+      value: "5400000"
+    - name: CAMUNDA_OPERATE_ELASTICSEARCH_SOCKETTIMEOUT
+      value: "5400000"
 
   optimize:
     contextPath: "/optimize"
@@ -62,6 +66,10 @@ camunda-platform:
     env:
     - name: CAMUNDA_TASKLIST_BACKUP_REPOSITORY_NAME
       value: "tasklist-backup"
+    - name: CAMUNDA_TASKLIST_ELASTICSEARCH_CONNECTTIMEOUT
+      value: "5400000"
+    - name: CAMUNDA_TASKLIST_ELASTICSEARCH_SOCKETTIMEOUT
+      value: "5400000"
 
   zeebe:
     logLevel: debug
