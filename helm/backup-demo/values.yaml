@@ -178,13 +178,7 @@ minio:
   persistence:
     size: 256Gi
   provisioning:
-    resources:
-      requests:
-        cpu: 2
-        memory: 512Mi
-      limits:
-        cpu: 3
-        memory: 1024Mi
+    resourcesPreset: medium
   defaultBuckets: zeebe-backup,operate-backup,tasklist-backup,optimize-backup
 
   ingress:
