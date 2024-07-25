@@ -72,6 +72,8 @@ camunda-platform:
       value: "5400000"
 
   zeebe:
+    image:
+      tag: 8.5.5
     logLevel: debug
     env:
     - name: ZEEBE_BROKER_EXECUTION_METRICS_EXPORTER_ENABLED
@@ -92,6 +94,8 @@ camunda-platform:
       value: "us-east-1"
 
   zeebeGateway:
+    image:
+        tag: 8.5.5
     env:
     - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE
       value: "none"
