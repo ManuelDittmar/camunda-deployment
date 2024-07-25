@@ -4,8 +4,17 @@ metadata:
   name: argo-workflow-access
 rules:
 - apiGroups: [""]
-  resources: ["secrets", "serviceaccounts", "configmaps", "services"]
+  resources: ["secrets", "serviceaccounts", "configmaps", "services", "pods", "persistentvolumeclaims"]
   verbs: ["get", "list", "create", "update", "delete"]
 - apiGroups: ["networking.k8s.io"]
   resources: ["networkpolicies"]
+  verbs: ["get", "list", "create", "update", "delete"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "statefulsets", "daemonsets", "replicasets"]
+  verbs: ["get", "list", "create", "update", "delete"]
+- apiGroups: ["batch"]
+  resources: ["jobs", "cronjobs"]
+  verbs: ["get", "list", "create", "update", "delete"]
+- apiGroups: ["extensions"]
+  resources: ["ingresses"]
   verbs: ["get", "list", "create", "update", "delete"]
