@@ -4,7 +4,7 @@ metadata:
   name: argo-workflow-access
 rules:
 - apiGroups: [""]
-  resources: ["secrets", "serviceaccounts"]
+  resources: ["secrets", "serviceaccounts", "configmaps"]
   verbs: ["get", "list", "create", "update", "delete"]
 - apiGroups: ["networking.k8s.io"]
   resources: ["networkpolicies"]
