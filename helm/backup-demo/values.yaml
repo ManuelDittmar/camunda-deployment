@@ -211,3 +211,7 @@ argo-workflows:
           secretName: workflow-tls
     authModes:
     - server
+  controller:
+    workflowNamespaces:
+    - default
+    - camunda
