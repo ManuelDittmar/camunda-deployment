@@ -214,3 +214,6 @@ argo-workflows:
   workflow:
     serviceAccount:
       create: true
+  controller:
+    rbac:
+     accessAllSecrets: true
