@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: upgrade-camunda
+spec:
+  entrypoint: upgrade-camunda
+  templates:
+  - name: upgrade-camunda
+    inputs:
+      parameters:
+      - name: release-name
+      - name: helm-namespace
+      - name: values-file
+      - name: zeebe-cluster-size
+      - name: operate-enabled
+      - name: optimize-enabled
+      - name: tasklist-enabled
+      - name: connectors-enabled
+    serviceAccountName: argo-workflow
+    container:
+      name: helm
+      image: alpine/helm:3.15.3
+      command: 
+        - sh
+        - -c
+        - |
+          helm repo add camunda https://helm.camunda.io && \
+          helm repo update && \
+          helm upgrade {{inputs.parameters.release-name}} camunda/camunda-platform -f {{inputs.parameters.values-file}} \
+          --set zeebe.clusterSize={{inputs.parameters.zeebe-cluster-size}} \
+          --set operate.enabled={{inputs.parameters.operate-enabled}} \
+          --set optimize.enabled={{inputs.parameters.optimize-enabled}} \
+          --set connectors.enabled={{inputs.parameters.connectors-enabled}} \
+          --set tasklist.enabled={{inputs.parameters.tasklist-enabled}} --wait
+      env:
+        - name: HELM_NAMESPACE
+          value: "{{inputs.parameters.helm-namespace}}"
+    restartPolicy: Never
+  backoffLimit: 4

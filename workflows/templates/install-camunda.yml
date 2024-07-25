@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: install-camunda
+spec:
+  entrypoint: install-camunda
+  templates:
+  - name: install-camunda
+    inputs:
+      parameters:
+      - name: release-name
+      - name: helm-namespace
+      - name: values-file
+      - name: version
+    serviceAccountName: argo-workflow
+    container:
+      name: helm
+      image: alpine/helm:3.15.3
+      command: 
+        - sh
+        - -c
+        - |
+          helm repo add camunda https://helm.camunda.io && \
+          helm repo update && \
+          helm install {{inputs.parameters.release-name}} camunda/camunda-platform -f {{inputs.parameters.values-file}} --version {{inputs.parameters.version}} --wait
+      env:
+        - name: HELM_NAMESPACE
+          value: "{{inputs.parameters.helm-namespace}}"
+    restartPolicy: Never

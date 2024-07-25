@@ -4,17 +4,23 @@ metadata:
   name: restore-camunda-wf
 spec:
   serviceAccountName: argo-workflow
-  entrypoint: restore-camunda
+  entrypoint: main
   arguments:
     parameters:
+    - name: RELEASE_NAME
+      value: "camunda"
+    - name: NAMESPACE
+      value: "camunda"
+    - name: VALUE_FILE
+      value: "https://raw.githubusercontent.com/ManuelDittmar/camunda-deployment/main/workflows/templates/camunda-values.yaml"
+    - name: VERSION
+      value: "10.2.1"
     - name: sequence-start
       value: "0"
     - name: sequence-end
       value: "2"
     - name: IMAGE
       value: "camunda/zeebe:8.5.5"
-    - name: PVC_PREFIX
-      value: "data-camunda-backup-zeebe"
     - name: ZEEBE_RESTORE_FROM_BACKUP_ID
       value: "20240723094537"
     - name: ZEEBE_BROKER_DATA_BACKUP_STORE
@@ -38,8 +44,58 @@ spec:
     - name: ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR
       value: "3"
     - name: ELASTICSEARCH_ENDPOINT
-      value: "http://camunda-backup-elasticsearch:9200"
+      value: "http://{{workflow.parameters.RELEASE_NAME}}-elasticsearch:9200"
   templates:
+  - name: main
+    steps:
+    - - name: install-camunda
+        template: install-camunda
+    - - name: scale-down-camunda
+        template: scale-down-camunda
+    - - name: restore-camunda
+        template: restore-camunda
+    - - name: scale-up-camunda
+        template: scale-up-camunda
+  - name: install-camunda
+    steps:
+    - - name: install-camunda
+        templateRef:
+              name: install-camunda
+              template: install-camunda
+        arguments:
+          parameters:
+          - name: release-name
+            value: "{{workflow.parameters.RELEASE_NAME}}"
+          - name: helm-namespace
+            value: "{{workflow.parameters.NAMESPACE}}"
+          - name: values-file
+            value: "{{workflow.parameters.VALUE_FILE}}"
+          - name: version
+            value: "{{workflow.parameters.VERSION}}"
+  - name: scale-down-camunda
+    steps:
+    - - name: upgrade-camunda
+        templateRef:
+                name: upgrade-camunda
+                template: upgrade-camunda
+        arguments:
+          parameters:
+          - name: release-name
+            value: "{{workflow.parameters.RELEASE_NAME}}"
+          - name: helm-namespace
+            value: "{{workflow.parameters.NAMESPACE}}"
+          - name: values-file
+            value: "{{workflow.parameters.VALUE_FILE}}"
+          - name: zeebe-cluster-size
+            value: "0"
+          - name: operate-enabled
+            value: "false"
+          - name: optimize-enabled
+            value: "false"
+          - name: tasklist-enabled
+            value: "false"
+          - name: connectors-enabled
+            value: "false"
   - name: restore-camunda
     dag:
       tasks:
@@ -107,7 +163,7 @@ spec:
           - name: IMAGE
             value: "{{workflow.parameters.IMAGE}}"
           - name: CLAIM_NAME
-            value: "{{workflow.parameters.PVC_PREFIX}}-{{item}}"
+            value: "data-{{workflow.parameters.RELEASE_NAME}}-zeebe-{{item}}"
           - name: ZEEBE_RESTORE_FROM_BACKUP_ID
             value: "{{workflow.parameters.ZEEBE_RESTORE_FROM_BACKUP_ID}}"
           - name: ZEEBE_BROKER_DATA_BACKUP_STORE
@@ -130,3 +186,27 @@ spec:
             value: "{{workflow.parameters.ZEEBE_BROKER_CLUSTER_CLUSTERSIZE}}"
           - name: ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR
             value: "{{workflow.parameters.ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR}}"
+  - name: scale-up-camunda
+    steps:
+    - - name: upgrade-camunda
+        templateRef:
+                name: upgrade-camunda
+                template: upgrade-camunda
+        arguments:
+          parameters:
+          - name: release-name
+            value: "{{workflow.parameters.RELEASE_NAME}}"
+          - name: helm-namespace
+            value: "{{workflow.parameters.NAMESPACE}}"
+          - name: values-file
+            value: "{{workflow.parameters.VALUE_FILE}}"
+          - name: zeebe-cluster-size
+            value: "3"
+          - name: operate-enabled
+            value: "true"
+          - name: optimize-enabled
+            value: "true"
+          - name: tasklist-enabled
+            value: "true"
+          - name: connectors-enabled
+            value: "true"
