@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: argo-workflow-secret-network-policy-access-binding
+  name: argo-workflow-access-binding
 subjects:
 - kind: ServiceAccount
   name: argo-workflow
   namespace: camunda
 roleRef:
   kind: ClusterRole
-  name: argo-workflow-secret-network-policy-access
+  name: argo-workflow-access
   apiGroup: rbac.authorization.k8s.io
