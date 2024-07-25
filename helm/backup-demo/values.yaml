@@ -209,3 +209,5 @@ argo-workflows:
         - hosts:
           - workflows.dittmeister.de
           secretName: workflow-tls
+    authModes:
+    - server
