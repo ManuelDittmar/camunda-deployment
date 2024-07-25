@@ -8,3 +8,6 @@ dependencies:
   - name: minio
     version: 14.6.25
     repository: https://charts.bitnami.com/bitnami
+  - name: argo-workflows
+    version: 0.41.11
+    repository: https://argoproj.github.io/argo-helm
