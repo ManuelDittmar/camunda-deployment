@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: register-snapshot
+spec:
+  templates:
+  - name: register-snapshot
+    inputs:
+      parameters:
+      - name: bucket
+      - name: s3-endpoint
+      - name: elasticsearch-endpoint
+    container:
+      image: curlimages/curl
+      command: ["/bin/sh"]
+      args:
+      - -c
+      - |
+        #!/bin/sh
+        # Define the bucket name from input parameter
+        bucket="{{inputs.parameters.bucket}}"
+        
+        # Define the S3 endpoint from input parameter
+        endpoint="{{inputs.parameters.s3-endpoint}}"
+        
+        # Define the Elasticsearch endpoint from input parameter
+        elasticsearch_endpoint="{{inputs.parameters.elasticsearch-endpoint}}"
+        
+        # Register the bucket as a snapshot repository
+        curl -X PUT "$elasticsearch_endpoint/_snapshot/$bucket" -H 'Content-Type: application/json' -d '
+        {
+          "type": "s3",
+          "settings": {
+            "bucket": "'"$bucket"'",
+            "endpoint": "'"$endpoint"'",
+            "protocol": "http",
+            "compress": true,
+            "client": "default",
+            "path_style_access": true
+          }
+        }'
+        echo "Repository $bucket registered with MinIO using keystore credentials."
+    restartPolicy: OnFailure

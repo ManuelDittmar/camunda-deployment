@@ -1,0 +1,72 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: restore-zeebe
+spec:
+  templates:
+  - name: restore-zeebe
+    inputs:
+      parameters:
+      - name: IMAGE
+      - name: CLAIM_NAME
+      - name: ZEEBE_RESTORE_FROM_BACKUP_ID
+      - name: ZEEBE_BROKER_DATA_BACKUP_STORE
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_BUCKETNAME
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_ENDPOINT
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_REGION
+      - name: ZEEBE_BROKER_CLUSTER_NODEID
+      - name: ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT
+      - name: ZEEBE_BROKER_CLUSTER_CLUSTERSIZE
+      - name: ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR
+    container:
+      image: "{{inputs.parameters.IMAGE}}"
+      command: ["/bin/bash", "-c"]
+      args: 
+      - |
+        ls -laR /usr/local/zeebe/data;
+        rm -rf /usr/local/zeebe/data/* /usr/local/zeebe/data/.*;
+        echo "Starting restoration process for node {{inputs.parameters.ZEEBE_BROKER_CLUSTER_NODEID}} with claim name {{inputs.parameters.CLAIM_NAME}}..."
+        ls -laR /usr/local/zeebe/data;
+        /usr/local/zeebe/bin/restore --backupId={{inputs.parameters.ZEEBE_RESTORE_FROM_BACKUP_ID}}
+        echo "Restoration complete for node {{inputs.parameters.ZEEBE_BROKER_CLUSTER_NODEID}} with claim name {{inputs.parameters.CLAIM_NAME}}."
+      env:
+      - name: ZEEBE_RESTORE_FROM_BACKUP_ID
+        value: "{{inputs.parameters.ZEEBE_RESTORE_FROM_BACKUP_ID}}"
+      - name: ZEEBE_BROKER_DATA_BACKUP_STORE
+        value: "{{inputs.parameters.ZEEBE_BROKER_DATA_BACKUP_STORE}}"
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_BUCKETNAME
+        value: "{{inputs.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_BUCKETNAME}}"
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS
+        value: "{{inputs.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS}}"
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_ENDPOINT
+        value: "{{inputs.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_ENDPOINT}}"
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY
+        value: "{{inputs.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY}}"
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY
+        value: "{{inputs.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY}}"
+      - name: ZEEBE_BROKER_DATA_BACKUP_S3_REGION
+        value: "{{inputs.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_REGION}}"
+      - name: ZEEBE_BROKER_CLUSTER_NODEID
+        value: "{{inputs.parameters.ZEEBE_BROKER_CLUSTER_NODEID}}"
+      - name: ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT
+        value: "{{inputs.parameters.ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT}}"
+      - name: ZEEBE_BROKER_CLUSTER_CLUSTERSIZE
+        value: "{{inputs.parameters.ZEEBE_BROKER_CLUSTER_CLUSTERSIZE}}"
+      - name: ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR
+        value: "{{inputs.parameters.ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR}}"
+      volumeMounts:
+      - name: data
+        mountPath: /usr/local/zeebe/data
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+    securityContext:
+      fsGroup: 1000 
+    volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: "{{inputs.parameters.CLAIM_NAME}}"
+    restartPolicy: OnFailure

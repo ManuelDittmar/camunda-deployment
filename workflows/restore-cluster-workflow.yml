@@ -1,0 +1,169 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: restore-camunda-wf
+spec:
+  serviceAccountName: argo-workflow
+  entrypoint: restore-camunda
+  arguments:
+    parameters:
+    - name: sequence-start
+      value: "0"
+    - name: sequence-end
+      value: "2"
+    - name: IMAGE
+      value: "camunda/zeebe:8.5.5"
+    - name: PVC_PREFIX
+      value: "data-camunda-backup-zeebe"
+    - name: ZEEBE_RESTORE_FROM_BACKUP_ID
+      value: "20240723094537"
+    - name: ZEEBE_BROKER_DATA_BACKUP_STORE
+      value: "S3"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_BUCKETNAME
+      value: "zeebe-backup"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS
+      value: "true"
+    - name: S3_ENDPOINT
+      value: "http://camunda-backup-minio:9000"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY
+      value: "minioadmin"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY
+      value: "minioadmin"
+    - name: ZEEBE_BROKER_DATA_BACKUP_S3_REGION
+      value: "us-east-1"
+    - name: ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT
+      value: "3"
+    - name: ZEEBE_BROKER_CLUSTER_CLUSTERSIZE
+      value: "3"
+    - name: ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR
+      value: "3"
+    - name: ELASTICSEARCH_ENDPOINT
+      value: "http://camunda-backup-elasticsearch:9200"
+  templates:
+  - name: restore-camunda
+    dag:
+      tasks:
+      - name: restore-webapps
+        template: restore-webapps
+      - name: restore-zeebe
+        template: restore-zeebe
+  - name: restore-webapps
+    steps:
+    - - name: elastic-delete-indices
+        templateRef:
+              name: elastic-delete-indices
+              template: elastic-delete-indices
+        arguments:
+          parameters:
+          - name: elasticsearch-endpoint
+            value: "{{workflow.parameters.ELASTICSEARCH_ENDPOINT}}"
+    - - name: register-snapshots
+        templateRef:
+          name: register-snapshot
+          template: register-snapshot
+        withItems:
+        - zeebe-backup
+        - operate-backup
+        - tasklist-backup
+        - optimize-backup
+        arguments:
+          parameters:
+          - name: bucket
+            value: "{{item}}"
+          - name: s3-endpoint
+            value: "{{workflow.parameters.S3_ENDPOINT}}"
+          - name: elasticsearch-endpoint
+            value: "{{workflow.parameters.ELASTICSEARCH_ENDPOINT}}"
+    - - name: restore-snapshot
+        templateRef:
+            name: restore-snapshot
+            template: restore-snapshot
+        withItems:
+        - zeebe-backup
+        - operate-backup
+        - tasklist-backup
+        - optimize-backup
+        arguments:
+          parameters:
+          - name: elasticsearch-endpoint
+            value: "{{workflow.parameters.ELASTICSEARCH_ENDPOINT}}"
+          - name: backup-time-id
+            value: "{{workflow.parameters.ZEEBE_RESTORE_FROM_BACKUP_ID}}"
+          - name: repository
+            value: "{{item}}"
+    - - name: restore-zeebe
+        templateRef:
+          name: restore-zeebe
+          template: restore-zeebe
+        withSequence:
+          start: "{{workflow.parameters.sequence-start}}"
+          end: "{{workflow.parameters.sequence-end}}"
+        arguments:
+          parameters:
+          - name: ZEEBE_BROKER_CLUSTER_NODEID
+            value: "{{item}}"
+          - name: IMAGE
+            value: "{{workflow.parameters.IMAGE}}"
+          - name: CLAIM_NAME
+            value: "{{workflow.parameters.PVC_PREFIX}}-{{item}}"
+          - name: ZEEBE_RESTORE_FROM_BACKUP_ID
+            value: "{{workflow.parameters.ZEEBE_RESTORE_FROM_BACKUP_ID}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_STORE
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_STORE}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_BUCKETNAME
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_BUCKETNAME}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_ENDPOINT
+            value: "{{workflow.parameters.S3_ENDPOINT}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_REGION
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_REGION}}"
+          - name: ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT
+            value: "{{workflow.parameters.ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT}}"
+          - name: ZEEBE_BROKER_CLUSTER_CLUSTERSIZE
+            value: "{{workflow.parameters.ZEEBE_BROKER_CLUSTER_CLUSTERSIZE}}"
+          - name: ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR
+            value: "{{workflow.parameters.ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR}}"
+  - name: restore-zeebe
+    steps:
+    - - name: restore-zeebe
+        templateRef:
+          name: restore-zeebe
+          template: restore-zeebe
+        withSequence:
+          start: "{{workflow.parameters.sequence-start}}"
+          end: "{{workflow.parameters.sequence-end}}"
+        arguments:
+          parameters:
+          - name: ZEEBE_BROKER_CLUSTER_NODEID
+            value: "{{item}}"
+          - name: IMAGE
+            value: "{{workflow.parameters.IMAGE}}"
+          - name: CLAIM_NAME
+            value: "{{workflow.parameters.PVC_PREFIX}}-{{item}}"
+          - name: ZEEBE_RESTORE_FROM_BACKUP_ID
+            value: "{{workflow.parameters.ZEEBE_RESTORE_FROM_BACKUP_ID}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_STORE
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_STORE}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_BUCKETNAME
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_BUCKETNAME}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_ENDPOINT
+            value: "{{workflow.parameters.S3_ENDPOINT}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY}}"
+          - name: ZEEBE_BROKER_DATA_BACKUP_S3_REGION
+            value: "{{workflow.parameters.ZEEBE_BROKER_DATA_BACKUP_S3_REGION}}"
+          - name: ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT
+            value: "{{workflow.parameters.ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT}}"
+          - name: ZEEBE_BROKER_CLUSTER_CLUSTERSIZE
+            value: "{{workflow.parameters.ZEEBE_BROKER_CLUSTER_CLUSTERSIZE}}"
+          - name: ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR
+            value: "{{workflow.parameters.ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR}}"
