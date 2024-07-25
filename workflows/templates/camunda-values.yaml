@@ -40,11 +40,11 @@ global:
             name: lazy-secret
           redirectUrl: "https://test.dittmeister.de/console"
 
-  identity:     
+identity:     
     contextPath: "/identity"
     fullURL: "https://test.dittmeister.de/identity"
 
-  operate:
+operate:
     contextPath: "/operate"
     env:
     - name: CAMUNDA_OPERATE_BACKUP_REPOSITORY_NAME
@@ -54,13 +54,13 @@ global:
     - name: CAMUNDA_OPERATE_ELASTICSEARCH_SOCKETTIMEOUT
       value: "5400000"
 
-  optimize:
+optimize:
     contextPath: "/optimize"
     env:
     - name: CAMUNDA_OPTIMIZE_BACKUP_REPOSITORY_NAME
       value: "optimize-backup"
 
-  tasklist:
+tasklist:
     contextPath: "/tasklist"
     env:
     - name: CAMUNDA_TASKLIST_BACKUP_REPOSITORY_NAME
@@ -70,7 +70,7 @@ global:
     - name: CAMUNDA_TASKLIST_ELASTICSEARCH_SOCKETTIMEOUT
       value: "5400000"
 
-  zeebe:
+zeebe:
     image:
       tag: 8.5.5
     logLevel: debug
@@ -92,7 +92,7 @@ global:
     - name: ZEEBE_BROKER_DATA_BACKUP_S3_REGION
       value: "us-east-1"
 
-  zeebeGateway:
+zeebeGateway:
     image:
         tag: 8.5.5
     env:
@@ -115,7 +115,7 @@ global:
         nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
         nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
   
-  elasticsearch:
+elasticsearch:
     global:
       kibanaEnabled: false
     kibana:
@@ -155,7 +155,7 @@ global:
     - name: S3_ACCESS_KEY
       value: minioadmin
   
-  identityPostgresql:
+identityPostgresql:
     enabled: true
     auth:
       existingSecret: lazy-secret
@@ -163,12 +163,12 @@ global:
           adminPasswordKey: postgres-password
           userPasswordKey: password
 
-  identityKeycloak:
+identityKeycloak:
     auth:
       existingSecret: lazy-secret
     postgresql:
       auth:
         existingSecret: lazy-secret
   
-  prometheusServiceMonitor:
+prometheusServiceMonitor:
     enabled: true
