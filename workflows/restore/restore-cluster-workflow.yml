@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  name: restore-camunda-wf
+  name: restore-camunda-wf-1000-instances
 spec:
   serviceAccountName: argo-workflow
   entrypoint: main
@@ -12,7 +12,7 @@ spec:
     - name: NAMESPACE
       value: "camunda"
     - name: VALUE_FILE
-      value: "https://raw.githubusercontent.com/ManuelDittmar/camunda-deployment/main/workflows/templates/camunda-values.yaml"
+      value: "https://raw.githubusercontent.com/ManuelDittmar/camunda-deployment/main/workflows/restore/templates/camunda-values.yaml"
     - name: VERSION
       value: "10.2.1"
     - name: sequence-start
