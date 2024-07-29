@@ -13,7 +13,7 @@ spec:
     chart: istiod
   destination:
     namespace: istio-system
-    server: in-cluster
+    server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
