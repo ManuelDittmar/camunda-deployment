@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istiod
+  name: istio-ingressgateway
   namespace: argo-cd
 spec:
   project: default
   source:
     repoURL: 'git@github.com:ManuelDittmar/camunda-deployment.git'
-    path: 'helm/multi-region/applications/service-mesh/istiod.yaml'
+    path: 'helm/multi-region/applications/service-mesh/istio-ingressgateway'
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: istio-system
@@ -17,3 +17,4 @@ spec:
       selfHeal: true
   dependencies:
     - istio-base
+    - istiod
