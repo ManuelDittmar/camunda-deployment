@@ -1,4 +1,5 @@
 camunda-platform:
+  enabled: false
   global:
     ingress:
       enabled: true
@@ -41,7 +42,7 @@ camunda-platform:
             name: lazy-secret
           redirectUrl: "https://test.dittmeister.de/console"
 
-  identity:     
+  identity:
     contextPath: "/identity"
     fullURL: "https://test.dittmeister.de/identity"
 
@@ -115,7 +116,7 @@ camunda-platform:
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
         nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
         nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
-  
+
   elasticsearch:
     global:
       kibanaEnabled: false
@@ -155,7 +156,7 @@ camunda-platform:
       value: minioadmin
     - name: S3_ACCESS_KEY
       value: minioadmin
-  
+
   identityPostgresql:
     enabled: true
     auth:
@@ -170,7 +171,7 @@ camunda-platform:
     postgresql:
       auth:
         existingSecret: lazy-secret
-  
+
   prometheusServiceMonitor:
     enabled: true
 
@@ -190,7 +191,7 @@ minio:
     enabled: true
     hostname: "minio.dittmeister.de"
     tls: true
-    annotations: 
+    annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-staging"
       ingress.kubernetes.io/rewrite-target: "/"
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
