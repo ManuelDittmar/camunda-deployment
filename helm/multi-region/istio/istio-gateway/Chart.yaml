@@ -2,6 +2,7 @@ apiVersion: v2
 name: istio-gateway
 version: 1.0.0
 dependencies:
-  - name: istio-gateway
+  - name: gateway
     version: 1.22.3
     repository: https://istio-release.storage.googleapis.com/charts
+    alias: istio-gateway
