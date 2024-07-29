@@ -1,0 +1,4 @@
+global:
+  network: secondary
+  multiCluster:
+    clusterName: secondary
