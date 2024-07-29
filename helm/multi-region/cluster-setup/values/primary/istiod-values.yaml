@@ -1,4 +1,4 @@
 global:
-  network: network1
+  network: primary
   multiCluster:
     clusterName: primary

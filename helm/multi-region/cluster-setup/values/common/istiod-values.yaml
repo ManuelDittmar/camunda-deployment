@@ -1,12 +1,12 @@
 global:
   meshID: camunda-mesh
   meshNetworks:
-    network1:
+    primary:
       endpoints:
         - fromRegistry: primary
       gateways:
         - registryServiceName: istio-stack-primary.istio-system.svc.cluster.local
-    network2:
+    secondary:
       endpoints:
         - fromRegistry: secondary
       gateways:

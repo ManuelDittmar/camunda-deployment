@@ -1,40 +1,4 @@
 global:
-  network: network2
+  network: secondary
   multiCluster:
     clusterName: secondary
-  meshID: camunda-mesh
-  meshNetworks:
-    network1:
-      endpoints:
-        - fromRegistry: primary
-      gateways:
-        - registryServiceName: istio-stack-primary.istio-system.svc.cluster.local
-    network2:
-      endpoints:
-        - fromRegistry: secondary
-      gateways:
-        - registryServiceName: istio-stack-secondary.istio-system.svc.cluster.local
-
-  pilot:
-    autoscaleEnabled: true
-    autoscaleMin: 1
-    autoscaleMax: 5
-    resources:
-      requests:
-        cpu: 500m
-        memory: 2048Mi
-
-  gateways:
-    istio-ingressgateway:
-      enabled: true
-
-  meshConfig:
-    enablePrometheusMerge: true
-
-kiali:
-  cr:
-    create: true
-    namespace: istio-system
-    spec:
-      auth:
-        strategy: anonymous
