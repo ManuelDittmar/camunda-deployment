@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-gateway
+  namespace: istio-system
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://istio-release.storage.googleapis.com/charts
+    targetRevision: 1.22.3
+    chart: istio-gateway
+  destination:
+    namespace: istio-system
+    server: in-cluster
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kiali-operator
+  namespace: istio-system
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://kiali.org/helm-charts
+    targetRevision: 1.87.0
+    chart: kiali-operator
+  destination:
+    namespace: istio-system
+    server: in-cluster
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+#  dependencies: []
