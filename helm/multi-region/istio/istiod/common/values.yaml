@@ -1,17 +1,8 @@
 istiod:
   global:
     meshID: camunda-mesh
-    meshNetworks:
-      primary:
-        endpoints:
-          - fromRegistry: primary
-        gateways:
-          - registryServiceName: istio-gateway-primary.istio-system.svc.cluster.local
-      secondary:
-        endpoints:
-          - fromRegistry: secondary
-        gateways:
-          - registryServiceName: istio-gateway-secondary.istio-system.svc.cluster.local
+    multiCluster:
+      enabled: true
 
   pilot:
     autoscaleEnabled: true
