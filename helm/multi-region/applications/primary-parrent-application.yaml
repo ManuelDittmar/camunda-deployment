@@ -9,21 +9,21 @@ spec:
         elements:
           - name: istio-base
             chart: base
-            targetRevision: 1.22.3
+            targetRevision: "1.22.3"
             valuesFile: values/primary/istio-base-values.yaml
           - name: istiod
             chart: istiod
-            targetRevision: 1.22.3
+            targetRevision: "1.22.3"
             valuesFile: values/primary/istiod-values.yaml
             dependencies: [istio-base]
           - name: istio-ingressgateway
             chart: gateway
-            targetRevision: 1.22.3
+            targetRevision: "1.22.3"
             valuesFile: values/primary/istio-ingressgateway-values.yaml
             dependencies: [istiod]
           - name: kiali
             chart: kiali-operator
-            targetRevision: 1.87.0
+            targetRevision: "1.87.0"
             valuesFile: values/primary/kiali-values.yaml
             dependencies: [istio-ingressgateway]
   template:
