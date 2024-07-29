@@ -1,0 +1,5 @@
+istiod:
+  global:
+    network: network2
+    multiCluster:
+      clusterName: secondary
