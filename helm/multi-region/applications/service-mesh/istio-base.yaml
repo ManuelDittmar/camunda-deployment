@@ -1,0 +1,9 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-base
+spec:
+  source:
+    chart: base
+    targetRevision: 1.22.3
+  dependencies: []

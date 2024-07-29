@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: multiregion-primary
+  namespace: argo-cd
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:ManuelDittmar/camunda-deployment.git'
+    path: helm/multi-region/applications/service-mesh
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  template:
+    metadata:
+      name: '{{name}}'
+    spec:
+      project: default
+      source:
+        repoURL: 'git@github.com:ManuelDittmar/camunda-deployment.git'
+        path: 'helm/multi-region/applications/child-applications/{{name}}'
+        helm:
+          valueFiles:
+            - 'values/primary/{{name}}-values.yaml'
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: istio-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+  generators:
+    - list:
+        elements:
+          - name: istio-base
+          - name: istiod
+          - name: istio-ingressgateway
+          - name: kiali

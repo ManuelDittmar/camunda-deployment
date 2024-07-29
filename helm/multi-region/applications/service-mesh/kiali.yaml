@@ -1,0 +1,10 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kiali
+spec:
+  source:
+    chart: kiali-operator
+    targetRevision: 1.87.0
+  dependencies:
+    - istio-ingressgateway
