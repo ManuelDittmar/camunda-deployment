@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istiod
+  name: istiod-{{ .Values.spec.multiRegion.clusterName }}
   namespace: argo-cd
   annotations:
     argocd.argoproj.io/sync-wave: "2"
