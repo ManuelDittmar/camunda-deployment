@@ -6,12 +6,12 @@ istiod:
         endpoints:
           - fromRegistry: primary
         gateways:
-          - registryServiceName: primary-ingressgateway.istio-system.svc.cluster.local
+          - registryServiceName: istio-gateway-primary.istio-system.svc.cluster.local
       network2:
         endpoints:
           - fromRegistry: secondary
         gateways:
-          - registryServiceName: secondary-ingressgateway.istio-system.svc.cluster.local
+          - registryServiceName: istio-gateway-secondary.istio-system.svc.cluster.local
 
   pilot:
     autoscaleEnabled: true
