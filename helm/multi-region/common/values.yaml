@@ -28,3 +28,11 @@ istiod:
 
   meshConfig:
     enablePrometheusMerge: true
+
+kiali:
+  cr:
+    create: true
+    namespace: istio-system
+    spec:
+      auth:
+        strategy: anonymous
