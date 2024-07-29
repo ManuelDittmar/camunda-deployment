@@ -1,20 +1,31 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
   name: multiregion-primary
   namespace: argo-cd
 spec:
-  project: default
-  source:
-    repoURL: 'git@github.com:ManuelDittmar/camunda-deployment.git'
-    path: helm/multi-region/applications/service-mesh
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: istio-system
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+  generators:
+    - list:
+        elements:
+          - name: istio-base
+            chart: base
+            targetRevision: 1.22.3
+            valuesFile: values/primary/istio-base-values.yaml
+          - name: istiod
+            chart: istiod
+            targetRevision: 1.22.3
+            valuesFile: values/primary/istiod-values.yaml
+            dependencies: [istio-base]
+          - name: istio-ingressgateway
+            chart: gateway
+            targetRevision: 1.22.3
+            valuesFile: values/primary/istio-ingressgateway-values.yaml
+            dependencies: [istiod]
+          - name: kiali
+            chart: kiali-operator
+            targetRevision: 1.87.0
+            valuesFile: values/primary/kiali-values.yaml
+            dependencies: [istio-ingressgateway]
   template:
     metadata:
       name: '{{name}}'
@@ -22,10 +33,11 @@ spec:
       project: default
       source:
         repoURL: 'git@github.com:ManuelDittmar/camunda-deployment.git'
-        path: 'helm/multi-region/applications/child-applications/{{name}}'
+        chart: '{{chart}}'
+        targetRevision: '{{targetRevision}}'
         helm:
           valueFiles:
-            - 'values/primary/{{name}}-values.yaml'
+            - '{{valuesFile}}'
       destination:
         server: 'https://kubernetes.default.svc'
         namespace: istio-system
@@ -33,10 +45,3 @@ spec:
         automated:
           prune: true
           selfHeal: true
-  generators:
-    - list:
-        elements:
-          - name: istio-base
-          - name: istiod
-          - name: istio-ingressgateway
-          - name: kiali
