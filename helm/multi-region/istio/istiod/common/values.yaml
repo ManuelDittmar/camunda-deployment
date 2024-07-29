@@ -1,0 +1,30 @@
+istiod:
+  global:
+    meshID: camunda-mesh
+    meshNetworks:
+      network1:
+        endpoints:
+          - fromRegistry: primary
+        gateways:
+          - registryServiceName: primary-ingressgateway.istio-system.svc.cluster.local
+      network2:
+        endpoints:
+          - fromRegistry: secondary
+        gateways:
+          - registryServiceName: secondary-ingressgateway.istio-system.svc.cluster.local
+
+  pilot:
+    autoscaleEnabled: true
+    autoscaleMin: 1
+    autoscaleMax: 5
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2048Mi
+
+  gateways:
+    istio-ingressgateway:
+      enabled: true
+
+  meshConfig:
+    enablePrometheusMerge: true

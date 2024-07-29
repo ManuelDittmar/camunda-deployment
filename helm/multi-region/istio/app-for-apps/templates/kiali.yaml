@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kiali
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:ManuelDittmar/camunda-deployment.git
+    path: helm/multi-region/istio/kiali
+    targetRevision: HEAD
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      selfHeal: true

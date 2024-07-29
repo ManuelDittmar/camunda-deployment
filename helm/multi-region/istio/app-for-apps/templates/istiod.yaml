@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istiod
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:ManuelDittmar/camunda-deployment.git
+    path: helm/multi-region/istio/istiod
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - common/values.yaml
+        - {{ .Values.spec.multiRegion.clusterName }}/values.yaml
+  destination:
+    server: {{ .Values.spec.destination.server }}
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      selfHeal: true
