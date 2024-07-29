@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kiali
+  namespace: argo-cd
   annotations:
     argocd.argoproj.io/sync-wave: "4"
   finalizers:
