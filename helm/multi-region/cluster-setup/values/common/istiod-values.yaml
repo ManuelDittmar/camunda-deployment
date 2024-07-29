@@ -1,7 +1,4 @@
 global:
-  network: network1
-  multiCluster:
-    clusterName: primary
   meshID: camunda-mesh
   meshNetworks:
     network1:
