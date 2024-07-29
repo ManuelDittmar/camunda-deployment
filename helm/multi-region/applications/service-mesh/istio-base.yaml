@@ -2,8 +2,17 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: istio-base
+  namespace: argo-cd
 spec:
+  project: default
   source:
-    chart: base
-    targetRevision: 1.22.3
+    repoURL: 'git@github.com:ManuelDittmar/camunda-deployment.git'
+    path: 'helm/multi-region/applications/service-mesh/istio-base'
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
   dependencies: []
