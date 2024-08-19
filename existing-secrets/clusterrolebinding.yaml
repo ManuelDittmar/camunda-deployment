@@ -5,7 +5,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: argo-workflow
-  namespace: camunda
+  namespace: default
 roleRef:
   kind: ClusterRole
   name: argo-workflow-access
