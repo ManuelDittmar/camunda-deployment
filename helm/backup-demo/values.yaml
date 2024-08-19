@@ -9,7 +9,7 @@ camunda-platform:
         enabled: true
         secretName: camunda-tls
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-staging"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
         ingress.kubernetes.io/rewrite-target: "/"
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
     identity:
@@ -111,7 +111,7 @@ camunda-platform:
         enabled: true
         secretName: zeebe-tls
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-staging"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
         ingress.kubernetes.io/rewrite-target: "/"
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
         nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
@@ -130,7 +130,7 @@ camunda-platform:
         hostname: "test.dittmeister.de"
         path: "/kibana"
         annotations:
-          cert-manager.io/issuer: "letsencrypt-staging"
+          cert-manager.io/issuer: "letsencrypt-prod"
           ingress.kubernetes.io/rewrite-target: "/"
           nginx.ingress.kubernetes.io/ssl-redirect: "false"
       configuration:
@@ -192,7 +192,7 @@ minio:
     hostname: "minio.dittmeister.de"
     tls: true
     annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-staging"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
       ingress.kubernetes.io/rewrite-target: "/"
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
     ingressClassName: nginx
@@ -203,7 +203,7 @@ argo-workflows:
       enabled: true
       ingressClassName: nginx
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-staging"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
         ingress.kubernetes.io/rewrite-target: "/"
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
       tls:
