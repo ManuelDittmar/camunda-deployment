@@ -206,6 +206,9 @@ argo-workflows:
         cert-manager.io/cluster-issuer: "letsencrypt-prod"
         ingress.kubernetes.io/rewrite-target: "/"
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        
+      hosts:
+         - workflows.dittmeister.de
       tls:
         - hosts:
           - workflows.dittmeister.de
