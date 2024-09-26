@@ -5,7 +5,7 @@ global:
     host: "dittmeister.de"
     tls:
       enabled: true
-      secretName: camunda-tls
+      secretName: camunda-new-tls
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-staging"
       ingress.kubernetes.io/rewrite-target: "/"
@@ -84,7 +84,7 @@ zeebe:
   - name: ZEEBE_BROKER_DATA_BACKUP_S3_FORCEPATHSTYLEACCESS
     value: "true"
   - name: ZEEBE_BROKER_DATA_BACKUP_S3_ENDPOINT
-    value: "http://camunda-backup-minio:9000"
+    value: "http://camunda-minio:9000"
   - name: ZEEBE_BROKER_DATA_BACKUP_S3_ACCESSKEY
     value: "minioadmin"
   - name: ZEEBE_BROKER_DATA_BACKUP_S3_SECRETKEY
