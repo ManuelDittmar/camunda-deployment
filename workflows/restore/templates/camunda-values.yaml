@@ -171,4 +171,4 @@ identityKeycloak:
       existingSecret: lazy-secret
 
 prometheusServiceMonitor:
-  enabled: true
+  enabled: false
