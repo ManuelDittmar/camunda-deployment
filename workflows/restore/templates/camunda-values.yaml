@@ -2,7 +2,7 @@ global:
   ingress:
     enabled: true
     className: nginx
-    host: "test.dittmeister.de"
+    host: "dittmeister.de"
     tls:
       enabled: true
       secretName: camunda-tls
@@ -12,37 +12,37 @@ global:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
   identity:
     auth:
-      publicIssuerUrl: "https://test.dittmeister.de/auth/realms/camunda-platform"
+      publicIssuerUrl: "https://dittmeister.de/auth/realms/camunda-platform"
       zeebe:
         existingSecret:
           name: lazy-secret
       operate:
         existingSecret:
           name: lazy-secret
-        redirectUrl: "https://test.dittmeister.de/operate"
+        redirectUrl: "https://dittmeister.de/operate"
       tasklist:
         existingSecret:
           name: lazy-secret
-        redirectUrl: "https://test.dittmeister.de/tasklist"
+        redirectUrl: "https://dittmeister.de/tasklist"
       optimize:
         existingSecret:
           name: lazy-secret
-        redirectUrl: "https://test.dittmeister.de/optimize"
+        redirectUrl: "https://dittmeister.de/optimize"
       webModeler:
         existingSecret:
           name: lazy-secret
-        redirectUrl: "https://test.dittmeister.de/modeler"
+        redirectUrl: "https://dittmeister.de/modeler"
       console:
         existingSecret:
           name: lazy-secret
       connectors:
         existingSecret:
           name: lazy-secret
-        redirectUrl: "https://test.dittmeister.de/console"
+        redirectUrl: "https://dittmeister.de/console"
 
 identity:     
   contextPath: "/identity"
-  fullURL: "https://test.dittmeister.de/identity"
+  fullURL: "https://dittmeister.de/identity"
 
 operate:
   contextPath: "/operate"
@@ -125,7 +125,7 @@ elasticsearch:
       tls: true
       ingressClassName: nginx
       enabled: true
-      hostname: "test.dittmeister.de"
+      hostname: "dittmeister.de"
       path: "/kibana"
       annotations:
         cert-manager.io/issuer: "letsencrypt-staging"
