@@ -100,8 +100,6 @@ camunda-platform:
     image:
         tag: 8.5.5
     env:
-    - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE
-      value: "none"
     - name: ZEEBE_GATEWAY_MONITORING_ENABLED
       value: "true"
     logLevel: debug
