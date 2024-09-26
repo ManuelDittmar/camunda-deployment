@@ -102,7 +102,7 @@ zeebeGateway:
     value: "true"
   logLevel: debug
   ingress:
-    enabled: true
+    enabled: false
     className: nginx
     host: "zeebe.dittmeister.de"
     tls:
